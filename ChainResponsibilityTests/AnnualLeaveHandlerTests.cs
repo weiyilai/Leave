@@ -9,7 +9,7 @@ using NSubstitute;
 namespace ChainResponsibilityTests;
 
 [TestFixture]
-public class AnnualLeaveTests
+public class AnnualLeaveHandlerTests
 {
     private IDateTimeProvider _dateTimeProvider;
     private TimeHelper _timeHelper;
