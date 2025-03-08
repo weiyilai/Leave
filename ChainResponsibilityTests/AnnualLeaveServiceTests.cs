@@ -1,11 +1,7 @@
-﻿using ChainResponsibility.Providers.Interfaces;
-using ChainResponsibility;
-using NSubstitute;
-using ChainResponsibility.Leave.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
+﻿using ChainResponsibility.Entities;
 using ChainResponsibility.Leave;
-using ChainResponsibility.Entities;
-using System;
+using ChainResponsibility.Leave.Interfaces;
+using NSubstitute;
 
 namespace ChainResponsibilityTests;
 
