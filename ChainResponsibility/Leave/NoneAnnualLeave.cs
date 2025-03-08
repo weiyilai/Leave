@@ -18,10 +18,9 @@ public class NoneAnnualLeave : LeaveHandler
     {
         int onBoardDays = _timeHelper.CalculateTotalDays(applicationLeave.Employee.OnBoard);
 
-        Console.WriteLine($"NoneAnnualLeave onBoardDays: {onBoardDays}");
-
         if (onBoardDays < (int)AnnualLeaveRule.ThreeDays)
         {
+            Console.WriteLine($"未滿六個月 不給假 onBoardDays: {onBoardDays} AnnualLeaveDays: 0");
             return 0;
         }
 

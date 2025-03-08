@@ -14,13 +14,14 @@ public class AnnualLeaveTests
     private IDateTimeProvider _dateTimeProvider;
     private TimeHelper _timeHelper;
     private ServiceProvider _serviceProvider;
-    private IHandler _handler;
+    private ILeaveHandler _handler;
+    private DateTime _now;
 
     [SetUp]
     public void Setup()
     {
         _dateTimeProvider = Substitute.For<IDateTimeProvider>();
-        _dateTimeProvider.Now.Returns(new DateTime(2025, 3, 8, 0, 0, 0));
+        _dateTimeProvider.Now.Returns(new DateTime(2025, 3, 8, 0, 0, 0, DateTimeKind.Utc));
         _timeHelper = new TimeHelper(_dateTimeProvider);
 
         // º“¿¿ DI Æeæπ
@@ -35,7 +36,7 @@ public class AnnualLeaveTests
         services.AddTransient<AnnualLeaveFifteenDays>();
         services.AddTransient<AnnualLeaveSixteenDays>();
 
-        services.AddTransient<IHandler>(serviceProvider =>
+        services.AddTransient<ILeaveHandler>(serviceProvider =>
         {
             var noneAnnualleaveHandler = serviceProvider.GetRequiredService<NoneAnnualLeave>();
 
@@ -51,7 +52,15 @@ public class AnnualLeaveTests
         });
 
         _serviceProvider = services.BuildServiceProvider();
-        _handler = _serviceProvider.GetRequiredService<IHandler>();
+        _handler = _serviceProvider.GetRequiredService<ILeaveHandler>();
+
+        _now = new DateTime(2025, 3, 8, 0, 0, 0, DateTimeKind.Utc);
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _serviceProvider.Dispose();
     }
 
     /// <summary>
@@ -65,7 +74,7 @@ public class AnnualLeaveTests
         {
             Employee = new Employee
             {
-                OnBoard = new DateTime(2025, 3, 8, 0, 0, 0).AddMonths(-6).AddDays(2)
+                OnBoard = _now.AddMonths(-6).AddDays(2)
             }
         };
         int expected = 0;
@@ -94,7 +103,7 @@ public class AnnualLeaveTests
         {
             Employee = new Employee
             {
-                OnBoard = new DateTime(2025, 3, 8, 0, 0, 0).AddMonths(month).AddDays(day)
+                OnBoard = _now.AddMonths(month).AddDays(day)
             }
         };
         int expected = 3;
@@ -123,7 +132,7 @@ public class AnnualLeaveTests
         {
             Employee = new Employee
             {
-                OnBoard = new DateTime(2025, 3, 8, 0, 0, 0).AddMonths(month).AddDays(day)
+                OnBoard = _now.AddMonths(month).AddDays(day)
             }
         };
         int expected = 7;
@@ -152,7 +161,7 @@ public class AnnualLeaveTests
         {
             Employee = new Employee
             {
-                OnBoard = new DateTime(2025, 3, 8, 0, 0, 0).AddMonths(month).AddDays(day)
+                OnBoard = _now.AddMonths(month).AddDays(day)
             }
         };
         int expected = 10;
@@ -181,7 +190,7 @@ public class AnnualLeaveTests
         {
             Employee = new Employee
             {
-                OnBoard = new DateTime(2025, 3, 8, 0, 0, 0).AddMonths(month).AddDays(day)
+                OnBoard = _now.AddMonths(month).AddDays(day)
             }
         };
         int expected = 14;
@@ -210,7 +219,7 @@ public class AnnualLeaveTests
         {
             Employee = new Employee
             {
-                OnBoard = new DateTime(2025, 3, 8, 0, 0, 0).AddMonths(month).AddDays(day)
+                OnBoard = _now.AddMonths(month).AddDays(day)
             }
         };
         int expected = 15;
@@ -258,7 +267,7 @@ public class AnnualLeaveTests
         {
             Employee = new Employee
             {
-                OnBoard = new DateTime(2025, 3, 8, 0, 0, 0).AddMonths(month).AddDays(day)
+                OnBoard = _now.AddMonths(month).AddDays(day)
             }
         };
         int expected = result;

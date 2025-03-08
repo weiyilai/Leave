@@ -3,11 +3,11 @@ using ChainResponsibility.Leave.Interfaces;
 
 namespace ChainResponsibility.Leave;
 
-public abstract class LeaveHandler : IHandler
+public abstract class LeaveHandler : ILeaveHandler
 {
-    private IHandler? _nextHandler;
+    private ILeaveHandler? _nextHandler;
 
-    public IHandler SetNextHandler(IHandler nextHandler)
+    public ILeaveHandler SetNextHandler(ILeaveHandler nextHandler)
     {
         _nextHandler = nextHandler;
         return nextHandler;

@@ -7,7 +7,7 @@ namespace ChainResponsibility.Leave;
 /// </summary>
 public class AnnualLeaveThreeDays : LeaveHandler
 {
-    private TimeHelper _timeHelper;
+    private readonly TimeHelper _timeHelper;
 
     public AnnualLeaveThreeDays(TimeHelper timeHelper)
     {
@@ -18,11 +18,10 @@ public class AnnualLeaveThreeDays : LeaveHandler
     {
         int onBoardDays = _timeHelper.CalculateTotalDays(applicationLeave.Employee.OnBoard);
 
-        Console.WriteLine($"AnnualLeaveThreeDays onBoardDays: {onBoardDays}");
-
         if (onBoardDays >= (int)AnnualLeaveRule.ThreeDays && 
             onBoardDays < (int)AnnualLeaveRule.SevenDays)
         {
+            Console.WriteLine($"六個月以上(含)未滿一年者，三日 onBoardDays: {onBoardDays} AccualLeaveDays: 3");
             return 3;
         }
 

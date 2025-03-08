@@ -2,8 +2,8 @@
 
 namespace ChainResponsibility.Leave.Interfaces;
 
-public interface IHandler
+public interface ILeaveHandler
 {
-    IHandler SetNextHandler(IHandler nextHandler);
+    ILeaveHandler SetNextHandler(ILeaveHandler nextHandler);
     int CalculateAllowLeaveDays(ApplicationLeave applicationLeave);
 }

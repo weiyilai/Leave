@@ -19,9 +19,10 @@ builder.Services.AddTransient<AnnualLeaveTenDays>();
 builder.Services.AddTransient<AnnualLeaveFourteenDays>();
 builder.Services.AddTransient<AnnualLeaveFifteenDays>();
 builder.Services.AddTransient<AnnualLeaveSixteenDays>();
+builder.Services.AddTransient<IAnnualLeaveService, AnnualLeaveService>();
 
 // 註冊一個方法來構建責任鏈
-builder.Services.AddTransient<IHandler>(serviceProvider =>
+builder.Services.AddTransient<ILeaveHandler>(serviceProvider =>
 {
     var noneAnnualleaveHandler = serviceProvider.GetRequiredService<NoneAnnualLeave>();
 
@@ -38,19 +39,65 @@ builder.Services.AddTransient<IHandler>(serviceProvider =>
 
 using IHost host = builder.Build();
 
-var handler = host.Services.GetRequiredService<IHandler>();
+var annualLeaveService = host.Services.GetRequiredService<IAnnualLeaveService>();
 
-Console.WriteLine(handler.CalculateAllowLeaveDays(new ApplicationLeave
+var applicationLeaveByBrian = new ApplicationLeave
 {
     Employee = new Employee
     {
-        OnBoard = new DateTime(2019, 1, 1)
+        Id = "1",
+        Name = "Brian",
+        OnBoard = new DateTime(2019, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        LeaveHistory = new List<Leave>
+        {
+            new Leave
+            {
+                StartTime = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                EndTime = new DateTime(2020, 1, 5, 0, 0, 0, DateTimeKind.Utc)
+            },
+            new Leave
+            {
+                StartTime = new DateTime(2020, 2, 1, 0, 0, 0, DateTimeKind.Utc),
+                EndTime = new DateTime(2020, 2, 5, 0, 0, 0, DateTimeKind.Utc)
+            }
+        }
     },
     Leave = new Leave
     {
-        StartTime = new DateTime(2021, 1, 1),
-        EndTime = new DateTime(2021, 1, 10)
+        StartTime = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        EndTime = new DateTime(2023, 1, 2, 0, 0, 0, DateTimeKind.Utc)
     }
-}));
+};
+
+annualLeaveService.CanApproveLeave(
+    applicationLeaveByBrian
+    );
+
+var applicationLeaveByBruce = new ApplicationLeave
+{
+    Employee = new Employee
+    {
+        Id = "2",
+        Name = "Bruce",
+        OnBoard = new DateTime(2024, 6, 1, 0, 0, 0, DateTimeKind.Utc),
+        LeaveHistory = new List<Leave>
+        {
+            new Leave
+            {
+                StartTime = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                EndTime = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            }
+        }
+    },
+    Leave = new Leave
+    {
+        StartTime = new DateTime(2025, 2, 1, 0, 0, 0, DateTimeKind.Utc),
+        EndTime = new DateTime(2025, 2, 2, 0, 0, 0, DateTimeKind.Utc)
+    }
+};
+
+annualLeaveService.CanApproveLeave(
+    applicationLeaveByBruce
+    );
 
 await host.RunAsync();
